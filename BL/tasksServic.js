@@ -19,8 +19,14 @@ async function servic_findAllAndOrder() {
       let options = {
          is_done: ["is_done", "ASC"],
          is_doneRevers: ["is_done", "DESC"],
+         priority: ["priority", "ASC"],
+         priorityRevers: ["priority", "DESC"],
+         description: ["description", "ASC"],
+         descriptionRevers: ["description", "DESC"],
+         date: ["createdAt", "ASC"],
+         dateRevers: ["createdAt", "DESC"],
       }
-      return await findAll({ order: [options.is_done] });
+      return await findAll({ order: [options.is_done, options.priorityRevers, options.date] });
    } catch (error) {
       throw (error)
    }
