@@ -30,6 +30,6 @@ router.get("/", (req, res) => {
 //    } catch (err) {
 //       res.status(400).send({ "path error": "findById", dataError: err })
 //    }
-})
+// })
 
 module.exports = router

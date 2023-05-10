@@ -1,2 +1,2 @@
 cd "<path>"
-npm start
+code .
