@@ -1,7 +1,6 @@
 
-let SystemRoutes = require("./SystemRoutes")
-let TempMongoDBRoutes = require("./TempMongoDBRoutes")
-let TempPostreSQLRoutes = require("./TempPostreSQLRoutes")
+// let SystemRoutes = require("./SystemRoutes")
+let TaskRoutes = require("./TaskRoutes")
 
 function MainRoutes(server) {
 
@@ -12,9 +11,8 @@ function MainRoutes(server) {
       next();
    })
 
-   server.use("/system", SystemRoutes)
-   server.use("/tempMongo", TempMongoDBRoutes)
-   server.use("/tempPostres", TempPostreSQLRoutes)
+   // server.use("/system", SystemRoutes)
+   server.use("/tasks", TaskRoutes)
    server.use("*", (req, res) => res.status(404).send("Path does not exist"))
 
 }

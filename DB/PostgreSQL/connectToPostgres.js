@@ -2,7 +2,7 @@ let { Client } = require("pg");
 
 
 async function queryToPostgres(query) {
-
+   
    let client = new Client({
       user: process.env.PostgresUser,
       host: process.env.PostgresHost,
