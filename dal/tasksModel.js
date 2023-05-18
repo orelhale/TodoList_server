@@ -1,38 +1,55 @@
 
 const Sequelize = require('sequelize');
 const { DataTypes } = Sequelize;
-const sequelize = require("../DB/PostgreSQL/connectSequelize");
 
-let tasksModel = sequelize.define('tasks', {
-	id: {
-		type: DataTypes.INTEGER,
-		autoIncrement: true,
-		primaryKey: true
-	},
-	description: {
-		type: DataTypes.STRING,
-		allowNull: false
-	},
-	priority: {
-		type: DataTypes.INTEGER,
-		defaultValue: 1
-	},
-	start_date: {
-		type: DataTypes.BIGINT,
-		defaultValue: 1
-	},
-	end_date: {
-		type: DataTypes.BIGINT
-	},
-	is_done: {
-		type: DataTypes.BOOLEAN,
-		defaultValue: false
-	},
-});
+let sequelize_1 = require("../DB/PostgreSQL/connectSequelize");
+const sequelize_2 = new Sequelize('sqlite::memory:')
 
-(async () => {
-	await tasksModel.sync();
-})();
+let sequelize = sequelize_1;
+let tasksModel;
+
+sequelize_1.sync()
+	.then(() => {
+		console.log('DB connection sucessful.');
+	})
+	.catch(() => {
+		sequelize = sequelize_2
+		console.log("err===================");
+	})
+	.finally(() => {
+		
+		tasksModel = sequelize.define('tasks', {
+			id: {
+				type: DataTypes.INTEGER,
+				autoIncrement: true,
+				primaryKey: true
+			},
+			description: {
+				type: DataTypes.STRING,
+				allowNull: false
+			},
+			priority: {
+				type: DataTypes.INTEGER,
+				defaultValue: 1
+			},
+			start_date: {
+				type: DataTypes.BIGINT,
+				defaultValue: 1
+			},
+			end_date: {
+				type: DataTypes.BIGINT
+			},
+			is_done: {
+				type: DataTypes.BOOLEAN,
+				defaultValue: false
+			},
+		});
+
+		(async () => {
+			await tasksModel.sync()
+		})();
+	})
+
 
 
 function findAll(options) {
