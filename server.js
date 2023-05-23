@@ -1,26 +1,31 @@
 let express = require("express")
-require("dotenv").config()
 let cors = require('cors')
+const http = require('http');
+require("dotenv").config()
 
-let { checkTableAndCreate , dropTables} = require("./DB/PostgreSQL/functionPostgresOfAdmin")
-
+let { checkTableAndCreate, dropTables } = require("./DB/PostgreSQL/functionPostgresOfAdmin")
 
 let MainRoutes = require("./routes/MainRoutes")
-
-let server = express()
-server.use(express.json())
-server.use(cors())
+let createSocket = require("./socket")
 
 
-MainRoutes(server)
+let app = express()
+const server = http.createServer(app);
+
+app.use(express.json())
+app.use(cors())
+
+MainRoutes(app)
+
 
 let port = process.env.MYPORT || 8081;
-
-
 
 server.listen(port, async () => {
    // Drop tables
    // await dropTables()
-   
-   console.log("\nThe server run in port " + port);
+
+   console.log("\nThe app run in port " + port);
+
+   createSocket(server)
+   // mySocket(server)
 })

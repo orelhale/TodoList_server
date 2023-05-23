@@ -14,7 +14,6 @@ sequelize_1.sync()
 	})
 	.catch(() => {
 		sequelize = sequelize_2
-		console.log("err===================");
 	})
 	.finally(() => {
 		
