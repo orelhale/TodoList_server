@@ -1,7 +1,7 @@
 
 let { Router } = require("express")
 let router = Router()
-let { createToken, checkToken } = require("../BL/systemServic")
+let { createToken, checkToken } = require("../BL/systemservice")
 
 
 router.get("/", (req, res) => {

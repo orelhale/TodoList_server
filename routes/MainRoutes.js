@@ -1,6 +1,6 @@
 
-// let SystemRoutes = require("./SystemRoutes")
 let TaskRoutes = require("./TaskRoutes")
+
 
 function MainRoutes(server) {
 
@@ -11,10 +11,8 @@ function MainRoutes(server) {
       next();
    })
 
-   // server.use("/system", SystemRoutes)
    server.use("/tasks", TaskRoutes)
    server.use("*", (req, res) => res.status(404).send("Path does not exist"))
-
 }
 
 module.exports = MainRoutes;

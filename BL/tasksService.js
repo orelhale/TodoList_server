@@ -1,20 +1,20 @@
 let {
    findAll,
-   addTask,
-   editTask,
-   deleteTask,
+   create,
+   update,
+   deleteById,
 } = require("../dal/tasksModel")
 
 
-async function servic_findAll() {
+async function taskService_findAll(where) {
    try {
-      return await findAll();
+      return await findAll(where);
    } catch (error) {
       throw (error)
    }
 }
 
-async function servic_findAllAndOrder() {
+function taskService_findAllAndOrder() {
    try {
       let options = {
          is_done: ["is_done", "ASC"],
@@ -26,51 +26,52 @@ async function servic_findAllAndOrder() {
          date: ["createdAt", "ASC"],
          dateRevers: ["createdAt", "DESC"],
       }
-      return await findAll({ order: [options.is_done, options.priorityRevers, options.date] });
+      return findAll({ order: [options.is_done, options.priorityRevers, options.date] });
    } catch (error) {
       throw (error)
    }
 }
 
-async function servic_addTask(data) {
+function taskService_create(data) {
    try {
       if (!data)
          throw ("ERROR: data is empty")
 
-      return await addTask(data);
+      return create(data);
    } catch (error) {
       throw (error)
    }
 }
 
-async function servic_editTask(data, id) {
+async function taskService_updateById(data, id) {
    try {
       if (!data)
          throw ("ERROR: data is empty")
+
       if (!id)
          throw ("ERROR: id is empty")
 
-      return await editTask(data, id);
+      return await update(data, { id: id });
    } catch (error) {
       throw (error)
    }
 }
 
-async function servic_deleteTask(id) {
+async function taskService_deleteById(id) {
    try {
       if (!id)
          throw ("ERROR: id is empty")
 
-      return await deleteTask(id);
+      return await deleteById(id);
    } catch (error) {
       throw (error)
    }
 }
 
 module.exports = {
-   servic_findAll,
-   servic_addTask,
-   servic_editTask,
-   servic_deleteTask,
-   servic_findAllAndOrder,
+   taskService_findAll,
+   taskService_create,
+   taskService_updateById,
+   taskService_deleteById,
+   taskService_findAllAndOrder,
 }

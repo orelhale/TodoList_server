@@ -1,19 +1,20 @@
 
 let { Router } = require("express")
 let {
-   servic_findAll,
-   servic_addTask,
-   servic_editTask,
-   servic_deleteTask,
-   servic_findAllAndOrder,
-} = require("../BL/tasksServic")
+   taskService_findAll,
+   taskService_create,
+   taskService_updateById,
+   taskService_deleteById,
+   taskService_findAllAndOrder,
+} = require("../BL/tasksService")
+
 
 let router = Router()
 
 
 router.get("/", async (req, res) => {
    try {
-      res.status(200).send(await servic_findAllAndOrder())
+      res.status(200).send(await taskService_findAllAndOrder())
    } catch (err) {
       res.status(400).send(err)
    }
@@ -22,12 +23,13 @@ router.get("/", async (req, res) => {
 
 router.post("/", async (req, res) => {
    try {
-      await servic_addTask(req.body)
-      res.status(200).send(await servic_findAllAndOrder())
+      await taskService_create(req.body)
+      res.status(200).send(await taskService_findAllAndOrder())
    } catch (err) {
       res.status(400).send(err)
    }
 })
+
 
 router.put("/", async (req, res) => {
    try {
@@ -37,13 +39,14 @@ router.put("/", async (req, res) => {
 
       if (!req.body.id)
          throw ("ERROR: id is emapy")
-      await servic_editTask(req.body, req.body.id)
+      await taskService_updateById(req.body, req.body.id)
 
-      res.status(200).send(await servic_findAllAndOrder())
+      res.status(200).send(await taskService_findAllAndOrder())
    } catch (err) {
       res.status(400).send(err)
    }
 })
+
 
 router.delete("/", async (req, res) => {
    try {
@@ -54,13 +57,12 @@ router.delete("/", async (req, res) => {
       if (!req.body.id)
          throw ("ERROR: id is emapy")
 
-      await servic_deleteTask(req.body.id)
+      await taskService_deleteById(req.body.id)
       res.status(200).send()
    } catch (err) {
       res.status(400).send(err)
    }
 })
-
 
 
 module.exports = router
