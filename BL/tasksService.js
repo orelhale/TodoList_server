@@ -1,3 +1,4 @@
+const { DatabaseError } = require("../ErrorHandlerFiles/customErrorTypes");
 let {
    findAll,
    create,
@@ -33,13 +34,23 @@ function taskService_create(data) {
 }
 
 async function taskService_updateById(data, id) {
+
    if (!data)
-      throw ("ERROR: data is empty")
+      throw new EmptyFieldError("Data is emapy")
 
    if (!id)
-      throw ("ERROR: id is empty")
+      throw new EmptyFieldError("Id is emapy")
 
-   return await update(data, { id: id });
+   let task = await findAll({ where: { id: id } })
+   console.log("!task = ",!task);
+   console.log("task = ",task);
+   if (!task)
+      throw new EmptyFieldError("Id is not exist")
+
+   return task
+   await update(data, { id: id })
+      .then(data => data)
+      .catch(err => new DatabaseError())
 }
 
 async function taskService_deleteById(id) {
