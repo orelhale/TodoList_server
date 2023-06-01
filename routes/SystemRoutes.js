@@ -33,8 +33,8 @@ router.post("/register", (req, res) => {
 
 router.post("/createToken", (req, res) => {
    try {
-      let objectData = req.body.objectData
-      let token = createToken(objectData);
+      let dataObject = req.body.dataObject
+      let token = createToken(dataObject);
       res.status(200).send(token)
    } catch (err) {
       res.status(400).send({ err: err })
@@ -45,8 +45,8 @@ router.post("/createToken", (req, res) => {
 router.post("/checkToken", (req, res) => {
    try {
       let token = req.body.token
-      let objectData = checkToken(token);
-      res.status(200).send(objectData)
+      let dataObject = checkToken(token);
+      res.status(200).send(dataObject)
    } catch (err) {
       res.status(400).send(err)
    }
