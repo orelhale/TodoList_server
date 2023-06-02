@@ -1,6 +1,7 @@
 
 let { Router } = require("express")
-let { EmptyFieldError } = require("../ErrorHandlerFiles/customErrorTypes")
+let tryCatch = require("../functions/tryCatch")
+let { AppError } = require("../errorHandlerFiles/customErrorTypes")
 
 let {
    taskService_findAll,
@@ -8,62 +9,49 @@ let {
    taskService_updateById,
    taskService_deleteById,
    taskService_findAllAndOrder,
+   taskService_findById,
 } = require("../BL/tasksService")
-
 
 let router = Router()
 
 
-router.get("/", async (req, res) => {
+router.get("/", tryCatch(async (req, res) => {
+
    res.status(200).send(await taskService_findAllAndOrder())
-   // try {
-   // } catch (err) {
-   //    res.status(400).send(err)
-   // }
-})
+}))
 
 
-router.post("/", async (req, res) => {
+router.post("/", tryCatch(async (req, res) => {
+
    await taskService_create(req.body)
    res.status(200).send(await taskService_findAllAndOrder())
-   // try {
-   // } catch (err) {
-   //    res.status(400).send(err)
-   // }
-})
+
+}))
 
 
-router.put("/", async (req, res, next) => {
+router.put("/", tryCatch(async (req, res, next) => {
 
-      if (!req.body.id)
-      next(new EmptyFieldError("Id is emapy"))
+   let findTask = await taskService_findById(req.body.id)
 
-   // throw ("ERROR: id is emapy")
-   let gg = await taskService_updateById(req.body, req.body.id)
-      .catch(err=>next(err))
+   if (!findTask)
+      throw new AppError("Id not found")
 
-   res.status(200).send(await taskService_findAllAndOrder())
-   // try {
-   // } catch (err) {
-   //    res.status(400).send(err)
-   // }
-})
+   let updateTask = await taskService_updateById(req.body, req.body.id)
+
+   if (!updateTask[0])
+      throw new AppError("not updated")
+
+   let allTask = await taskService_findAll()
+
+   res.status(200).send(allTask)
+}))
 
 
-router.delete("/", async (req, res) => {
-   try {
-      if (!req.body)
-         throw ("ERROR: body is emapy")
+router.delete("/", tryCatch(async (req, res, next) => {
 
-      if (!req.body.id)
-         throw ("ERROR: id is emapy")
-
-      await taskService_deleteById(req.body.id)
-      res.status(200).send()
-   } catch (err) {
-      res.status(400).send(err)
-   }
-})
+   await taskService_deleteById(req.body.id)
+   res.status(200).send()
+}))
 
 
 module.exports = router

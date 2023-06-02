@@ -1,9 +1,8 @@
 
-let TaskRoutes = require("./TaskRoutes")
-let testsRoutes = require("./testsRoutes")
+let taskRoutes = require("./taskRoutes")
 
 
-function MainRoutes(server) {
+function mainRoutes(server) {
 
    server.use((req, res, next) => {
       console.log("\nURL = ", req.url);
@@ -12,9 +11,8 @@ function MainRoutes(server) {
       next();
    })
 
-   server.use("/tasks", TaskRoutes)
-   server.use("/tests", testsRoutes)
+   server.use("/tasks", taskRoutes)
    server.use("*", (req, res) => res.status(404).send("Path does not exist"))
 }
 
-module.exports = MainRoutes;
+module.exports = mainRoutes;

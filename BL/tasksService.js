@@ -1,14 +1,15 @@
-const { DatabaseError } = require("../ErrorHandlerFiles/customErrorTypes");
+const { AppError } = require("../errorHandlerFiles/customErrorTypes");
 let {
    findAll,
    create,
    update,
    deleteById,
+   findByPk,
 } = require("../dal/tasksModel")
 
 
-async function taskService_findAll(where) {
-   return await findAll(where);
+function taskService_findAll(where) {
+   return findAll(where);
 }
 
 function taskService_findAllAndOrder() {
@@ -27,37 +28,33 @@ function taskService_findAllAndOrder() {
 }
 
 function taskService_create(data) {
-   if (!data)
-      throw ("ERROR: data is empty")
-
    return create(data);
 }
 
-async function taskService_updateById(data, id) {
 
+function taskService_updateById(data, id) {
    if (!data)
-      throw new EmptyFieldError("Data is emapy")
+      throw new AppError("Data is emapy")
 
    if (!id)
-      throw new EmptyFieldError("Id is emapy")
+      throw new AppError("Id is emapy")
 
-   let task = await findAll({ where: { id: id } })
-   console.log("!task = ",!task);
-   console.log("task = ",task);
-   if (!task)
-      throw new EmptyFieldError("Id is not exist")
-
-   return task
-   await update(data, { id: id })
-      .then(data => data)
-      .catch(err => new DatabaseError())
+   return update(data, { id: id })
 }
 
-async function taskService_deleteById(id) {
-   if (!id)
-      throw ("ERROR: id is empty")
 
-   return await deleteById(id);
+function taskService_findById(id) {
+   if (!id)
+      throw new AppError("Id is emapy")
+
+   return findByPk(id)
+}
+
+function taskService_deleteById(id) {
+   if (!id)
+      throw new AppError("Id is emapy")
+
+   return deleteById(id)
 }
 
 module.exports = {
@@ -66,4 +63,5 @@ module.exports = {
    taskService_updateById,
    taskService_deleteById,
    taskService_findAllAndOrder,
+   taskService_findById,
 }
