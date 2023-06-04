@@ -1,66 +1,57 @@
 
 let { Router } = require("express")
+let tryCatch = require("../functions/tryCatch")
+let { AppError } = require("../errorHandlerFiles/customErrorTypes")
+
 let {
-   servic_findAll,
-   servic_addTask,
-   servic_editTask,
-   servic_deleteTask,
-   servic_findAllAndOrder,
-} = require("../BL/tasksServic")
+   taskService_findAll,
+   taskService_create,
+   taskService_updateById,
+   taskService_deleteById,
+   taskService_findAllAndOrder,
+   taskService_findById,
+} = require("../BL/tasksService")
 
 let router = Router()
 
 
-router.get("/", async (req, res) => {
-   try {
-      res.status(200).send(await servic_findAllAndOrder())
-   } catch (err) {
-      res.status(400).send(err)
-   }
-})
+router.get("/", tryCatch(async (req, res) => {
+
+   res.status(200).send(await taskService_findAllAndOrder())
+}))
 
 
-router.post("/", async (req, res) => {
-   try {
-      await servic_addTask(req.body)
-      res.status(200).send(await servic_findAllAndOrder())
-   } catch (err) {
-      res.status(400).send(err)
-   }
-})
+router.post("/", tryCatch(async (req, res) => {
 
-router.put("/", async (req, res) => {
-   try {
+   await taskService_create(req.body)
+   res.status(200).send(await taskService_findAllAndOrder())
 
-      if (!req.body)
-         throw ("ERROR: body is emapy")
+}))
 
-      if (!req.body.id)
-         throw ("ERROR: id is emapy")
-      await servic_editTask(req.body, req.body.id)
 
-      res.status(200).send(await servic_findAllAndOrder())
-   } catch (err) {
-      res.status(400).send(err)
-   }
-})
+router.put("/", tryCatch(async (req, res, next) => {
 
-router.delete("/", async (req, res) => {
-   try {
+   let findTask = await taskService_findById(req.body.id)
 
-      if (!req.body)
-         throw ("ERROR: body is emapy")
+   if (!findTask)
+      throw new AppError("Id not found")
 
-      if (!req.body.id)
-         throw ("ERROR: id is emapy")
+   let updateTask = await taskService_updateById(req.body, req.body.id)
 
-      await servic_deleteTask(req.body.id)
-      res.status(200).send()
-   } catch (err) {
-      res.status(400).send(err)
-   }
-})
+   if (!updateTask[0])
+      throw new AppError("not updated")
 
+   let allTask = await taskService_findAllAndOrder()
+
+   res.status(200).send(allTask)
+}))
+
+
+router.delete("/", tryCatch(async (req, res, next) => {
+
+   await taskService_deleteById(req.body.id)
+   res.status(200).send()
+}))
 
 
 module.exports = router

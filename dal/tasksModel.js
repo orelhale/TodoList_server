@@ -14,10 +14,9 @@ sequelize_1.sync()
 	})
 	.catch(() => {
 		sequelize = sequelize_2
-		console.log("err===================");
 	})
 	.finally(() => {
-		
+
 		tasksModel = sequelize.define('tasks', {
 			id: {
 				type: DataTypes.INTEGER,
@@ -52,30 +51,31 @@ sequelize_1.sync()
 
 
 
-function findAll(options) {
-	return tasksModel.findAll(options);
+function findAll(where) {
+	return tasksModel.findAll(where);
 }
 
 function findByPk(id) {
 	return tasksModel.findByPk(id);
 }
 
-function addTask(obj) {
+function create(obj) {
 	return tasksModel.create(obj);
 }
 
-function editTask(obj, id) {
-	return tasksModel.update(obj, { where: { id: id } });
+function update(obj, where) {
+	return tasksModel.update(obj, { where: where });
 }
 
-function deleteTask(id) {
+function deleteById(id) {
 	return tasksModel.destroy({ where: { id: id } });
 }
 
+
 module.exports = {
 	findAll,
-	addTask,
+	create,
 	findByPk,
-	editTask,
-	deleteTask,
+	update,
+	deleteById,
 }
