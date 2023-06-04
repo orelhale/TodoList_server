@@ -2,8 +2,8 @@ const { AppError } = require("./customErrorTypes")
 
 
 function logErrors(err, req, res, next) {
-   
    let { name, message, stack } = err
+
    console.error('\x1b[31m', 'Error: ', { name, message, route: req.url, stack })
    next(err)
 }

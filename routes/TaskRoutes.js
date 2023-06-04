@@ -41,7 +41,7 @@ router.put("/", tryCatch(async (req, res, next) => {
    if (!updateTask[0])
       throw new AppError("not updated")
 
-   let allTask = await taskService_findAll()
+   let allTask = await taskService_findAllAndOrder()
 
    res.status(200).send(allTask)
 }))
